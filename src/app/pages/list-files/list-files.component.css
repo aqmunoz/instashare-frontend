@@ -1,0 +1,16 @@
+.actions-file {
+    text-align: center;
+    cursor: pointer;
+}
+
+.download-icon {
+    color: #198754!important;
+}
+
+.edit-icon {
+    color: #0d6efd!important;
+}
+
+.hide {
+    display: none;
+}
