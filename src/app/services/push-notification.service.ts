@@ -12,6 +12,6 @@ export class PushNotificationService {
   constructor(private httpClient: HttpClient) { }
 
   sendSubscriptionToTheServer(suscription: PushSubscription) {
-    return this.httpClient.post(`${BASE_URL}`, suscription);
+    return this.httpClient.post(`${BASE_URL}/files/suscription`, suscription);
   }
 }

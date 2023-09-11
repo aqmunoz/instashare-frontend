@@ -18,6 +18,7 @@ export class AppComponent implements OnInit{
 
   ngOnInit(): void {
     this.requestSuscription();
+    this._swPush.messages.subscribe((data) => console.log('Resp: ', data));
   }
 
   requestSuscription() {

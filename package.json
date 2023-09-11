@@ -23,10 +23,13 @@
     "bootstrap-icons": "^1.10.5",
     "datatables.net": "^1.11.3",
     "datatables.net-bs5": "^1.11.3",
+    "g": "^2.0.1",
+    "http-server": "^14.1.1",
     "jquery": "^3.6.0",
     "rxjs": "~7.8.0",
     "sweetalert2": "^11.7.27",
     "tslib": "^2.3.0",
+    "yarn": "^1.22.19",
     "zone.js": "~0.13.0"
   },
   "devDependencies": {
