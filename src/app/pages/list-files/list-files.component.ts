@@ -4,8 +4,7 @@ import { Subject } from 'rxjs';
 import { FileStructure } from 'src/app/interfaces/file-structure';
 import { FilesService } from 'src/app/services/files.service';
 import Swal from 'sweetalert2';
-import { HttpClient } from '@angular/common/http';
-import { FileUrlResponse } from 'src/app/interfaces/file-url-response';
+import { DataTableDirective } from 'angular-datatables';
 
 @Component({
   selector: 'app-list-files',
@@ -14,12 +13,18 @@ import { FileUrlResponse } from 'src/app/interfaces/file-url-response';
 })
 export class ListFilesComponent implements OnInit, OnDestroy {
 
-  @ViewChild('downloadLink',{static:false}) downloadLink!: ElementRef;
+  @ViewChild('downloadLink', { static: false })
+  downloadLink!: ElementRef;
+
+  @ViewChild(DataTableDirective, { static: false })
+  dtElement!: DataTableDirective;
 
   public fileList!: FileStructure[];
 
   public dtOptions: DataTables.Settings = {};
   public dtTrigger: Subject<any> = new Subject<any>();
+
+  public showSpinner: boolean = false;
 
   constructor(
     private fileService: FilesService,
@@ -35,12 +40,14 @@ export class ListFilesComponent implements OnInit, OnDestroy {
   }
 
   initialize() {
+    this.showSpinner = true;
     this.fileService.getFileList()
       .subscribe({
         next: (files) => {
           console.log(files);
           this.fileList = files;
           this.dtTrigger.next(files);
+          this.showSpinner = false;
         },
         error: (error) => {
           Swal.fire('Error', error, 'error');
@@ -50,17 +57,19 @@ export class ListFilesComponent implements OnInit, OnDestroy {
 
   downloadFile(file: FileStructure) {
     if (this._verifyFileStatus(file)) {
+      this.showSpinner = true;
       this.fileService.downloadFile(file.name).subscribe({
         next: (url: any) => {
           this.downloadLink.nativeElement.href = url;
           this.downloadLink.nativeElement.click();
+          this.showSpinner = false;
         }
       });
     }
   }
 
   async renameFile(file: FileStructure) {
-    
+
     if (this._verifyFileStatus(file)) {
       const { value: newName } = await Swal.fire({
         title: 'Enter your new file name',
@@ -77,13 +86,16 @@ export class ListFilesComponent implements OnInit, OnDestroy {
       })
 
       if (newName) {
+        this.showSpinner = true;
         let nameSetted = this._setName(newName);
         this.fileService.renameFile(nameSetted, file.name).subscribe({
           next: () => {
             Swal.fire('File renamed', 'File renamed successfully', 'success');
-            this.initialize();//Reload file list to see the change
+            this.reloadList();//Reload file list to see the change
+            this.showSpinner = false;
           },
           error: (error) => {
+            this.showSpinner = false;
             Swal.fire('Error', error, 'error');
           }
         });
@@ -110,20 +122,28 @@ export class ListFilesComponent implements OnInit, OnDestroy {
   }
 
   uploadFile(event: any) {
-    console.log(event.target.files);
     if (event.target.files[0]) {
       let formData = new FormData();
       formData.append('file', event.target.files[0]);
-
+      this.showSpinner = true;
       this.fileService.addFile(formData).subscribe({
         next: () => {
           Swal.fire('Success', 'File uploaded successfully', 'success');
-          this.initialize();//Reload tthe file list to see the change
+          this.reloadList();//Reload tthe file list to see the change
+          this.showSpinner = false;
         },
         error: (error) => {
           Swal.fire('Error', error, 'error');
+          this.showSpinner = false;
         }
       });
     }
+  }
+
+  reloadList() {
+    this.dtElement.dtInstance.then((dtInstance: DataTables.Api) => {
+      dtInstance.destroy();
+      this.initialize();
+    });
   }
 }

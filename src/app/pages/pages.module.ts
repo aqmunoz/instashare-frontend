@@ -4,11 +4,13 @@ import { DataTablesModule } from "angular-datatables";
 
 import { ListFilesComponent } from './list-files/list-files.component';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
+import { SpinnerComponent } from '../components/spinner/spinner.component';
 
 
 
 @NgModule({
   declarations: [
+    SpinnerComponent,
     ListFilesComponent,
     PageNotFoundComponent
   ],

@@ -1,6 +1,6 @@
-<div class="container">
-    <!-- <table datatable [dtOptions]="dtOptions" class="row-border hover"></table> -->
-    <button class="btn btn-primary mb-3" (click)="inputFile.click()"><i class="bi bi-cloud-upload"></i> Add File</button>
+<!-- <div class="container">
+    <button class="btn btn-primary mb-3" (click)="inputFile.click()"><i class="bi bi-cloud-upload"></i> Add
+        File</button>
 
     <input type="file" id="input-add-file" name="input-add-file" class="hide" (change)="uploadFile($event)" #inputFile>
 
@@ -22,14 +22,65 @@
                     <div class="row">
                         <div class="col-md-6 col-sm-6 actions-file">
                             <a href="#" #downloadLink class="hide"></a>
-                            <span title="Download file"  (click)="downloadFile(file)"><i class="bi bi-cloud-download download-icon"></i></span>
+                            <span title="Download file" (click)="downloadFile(file)"><i
+                                    class="bi bi-cloud-download download-icon"></i></span>
                         </div>
                         <div class="col-md-6 col-sm-6 actions-file">
-                            <span title="Rename file"  (click)="renameFile(file)"><i class="bi bi-pencil-square edit-icon"></i></span>
+                            <span title="Rename file" (click)="renameFile(file)"><i
+                                    class="bi bi-pencil-square edit-icon"></i></span>
                         </div>
                     </div>
                 </td>
             </tr>
         </tbody>
     </table>
+</div> -->
+
+<div class="container">
+    <div class="wrapper">
+        <div class="overlay" *ngIf="showSpinner">
+            <div class="spinner-wrapper">
+                <app-spinner></app-spinner>
+            </div>
+        </div>
+
+        <div class="loaded-content" [class.blurred]="showSpinner">
+            <button class="btn btn-primary mb-3" (click)="inputFile.click()"><i class="bi bi-cloud-upload"></i> Add
+                File</button>
+
+            <input type="file" id="input-add-file" name="input-add-file" class="hide" (change)="uploadFile($event)"
+                #inputFile>
+
+            <table class="table table-striped table-hover" datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger">
+                <thead>
+                    <tr>
+                        <th scope="col">Name</th>
+                        <th scope="col">Status</th>
+                        <th scope="col">Size</th>
+                        <th scope="col">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let file of fileList">
+                        <td>{{file.name}}</td>
+                        <td>{{file.status}}</td>
+                        <td>{{file.size}} KB</td>
+                        <td>
+                            <div class="row">
+                                <div class="col-md-6 col-sm-6 actions-file">
+                                    <a href="#" #downloadLink class="hide"></a>
+                                    <span title="Download file" (click)="downloadFile(file)"><i
+                                            class="bi bi-cloud-download download-icon"></i></span>
+                                </div>
+                                <div class="col-md-6 col-sm-6 actions-file">
+                                    <span title="Rename file" (click)="renameFile(file)"><i
+                                            class="bi bi-pencil-square edit-icon"></i></span>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
 </div>
